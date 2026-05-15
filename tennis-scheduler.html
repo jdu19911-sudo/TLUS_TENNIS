@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>트러스 테니스 조편성</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="트러스">
+<meta name="theme-color" content="#13151a">
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22%ED%8A%B8%EB%9F%AC%EC%8A%A4%20%ED%85%8C%EB%8B%88%EC%8A%A4%22%2C%22short_name%22%3A%22%ED%8A%B8%EB%9F%AC%EC%8A%A4%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%2313151a%22%2C%22theme_color%22%3A%22%2313151a%22%7D">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yellow:#f5c518; --yellow-dim:#c9a010;
+  --bg:#13151a; --surface:#1e2130; --surface2:#252840; --border:#2e3250;
+  --text:#f0f1f5; --text-muted:#7b80a0;
+  --male:#60a5fa; --female:#f472b6; --mixed:#a78bfa; --rest:#4b5060; --danger:#f87171;
+  --gold:#f5c518; --silver:#94a3b8; --bronze:#cd7f32;
+}
+
+/* RANKING TABLE */
+.rank-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
+.rank-table th{background:var(--surface2);color:var(--text-muted);font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:9px 6px;text-align:center;border-bottom:1px solid var(--border);white-space:nowrap;overflow:hidden;}
+.rank-table th:nth-child(1){text-align:left;width:34%;}
+.rank-table th:nth-child(2){width:18%;}
+.rank-table th:nth-child(3){width:20%;}
+.rank-table th:nth-child(4){width:10%;}
+.rank-table th:nth-child(5){width:18%;}
+.rank-table td{padding:10px 6px;border-bottom:1px solid rgba(46,50,80,.3);text-align:center;vertical-align:middle;white-space:nowrap;overflow:hidden;}
+.rank-table td:nth-child(1){text-align:left;}
+.rank-table tr:last-child td{border-bottom:none;}
+.rank-table tr:hover td{background:rgba(255,255,255,.02);}
+.rank-num{font-family:'Black Han Sans',sans-serif;font-size:15px;margin-right:4px;}
+.rank-1 .rank-num{color:var(--gold);}
+.rank-2 .rank-num{color:var(--silver);}
+.rank-3 .rank-num{color:var(--bronze);}
+.rank-name{font-weight:600;font-size:13px;}
+.rank-1 .rank-name{color:var(--yellow);}
+.rank-pts{font-family:'Black Han Sans',sans-serif;font-size:15px;color:var(--yellow);}
+.rank-wl{font-size:12px;color:var(--text-muted);white-space:nowrap;}
+.rank-rate{font-size:11px;font-weight:600;white-space:nowrap;}
+.rank-rate.pos{color:#4ade80;} .rank-rate.neg{color:var(--danger);} .rank-rate.neu{color:var(--text-muted);}
+.rank-reset-btn{font-size:11px;padding:5px 11px;border:1px solid var(--border);border-radius:8px;background:none;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+.rank-reset-btn:hover{border-color:var(--danger);color:var(--danger);}
+.rank-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+
+/* SCORE INPUT in result */
+.score-section{padding:10px 15px 12px;background:rgba(0,0,0,.15);border-top:1px solid rgba(46,50,80,.4);}
+.score-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+.score-game-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+.score-court-label{font-size:12px;color:var(--yellow);font-family:'Black Han Sans',sans-serif;min-width:44px;flex-shrink:0;}
+.score-teams{font-size:12px;color:var(--text-muted);flex:1;min-width:0;}
+.score-input-group{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.score-inp{width:38px;height:32px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-weight:700;text-align:center;outline:none;}
+.score-inp:focus{border-color:var(--yellow);}
+.score-sep{color:var(--text-muted);font-weight:700;}
+.score-save-btn{display:block;width:100%;padding:9px;background:rgba(96,165,250,.15);border:1px solid rgba(96,165,250,.3);border-radius:10px;color:var(--male);font-family:'Black Han Sans',sans-serif;font-size:14px;cursor:pointer;margin-top:8px;transition:all .15s;}
+.score-save-btn:hover{background:rgba(96,165,250,.25);}
+.score-saved-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:8px;background:rgba(74,222,128,.15);color:#4ade80;margin-left:6px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;}
+.app{max-width:600px;margin:0 auto;padding:16px 14px 100px;}
+
+/* HEADER */
+header{padding:22px 0 18px;}
+.logo{font-family:'Black Han Sans',sans-serif;font-size:30px;color:var(--yellow);letter-spacing:-1px;}
+.logo small{font-size:13px;color:var(--text-muted);margin-left:6px;font-family:'Noto Sans KR',sans-serif;font-weight:400;}
+.subtitle{font-size:11px;color:var(--text-muted);margin-top:3px;}
+
+/* TAB */
+.tab-nav{display:flex;background:var(--surface);border-radius:12px;padding:4px;gap:3px;margin-bottom:14px;}
+.tab-btn{flex:1;padding:9px 4px;border:none;border-radius:9px;background:none;color:var(--text-muted);font-family:'Black Han Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .18s;}
+.tab-btn.active{background:var(--yellow);color:#13151a;}
+
+/* PANELS */
+.panel{display:none;} .panel.active{display:block;}
+
+/* CARD */
+.card{background:var(--surface);border-radius:14px;padding:18px;margin-bottom:12px;}
+.card-title{font-family:'Black Han Sans',sans-serif;font-size:15px;color:var(--text-muted);margin-bottom:14px;}
+
+/* SEC LABEL */
+.sec-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:5px;}
+.sec-label.m{color:var(--male);} .sec-label.f{color:var(--female);}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.dot-m{background:var(--male);} .dot-f{background:var(--female);}
+
+/* MEMBER CHIPS */
+.member-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px;}
+.mchip{padding:7px 13px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:2px solid transparent;transition:all .15s;user-select:none;}
+.mchip.m-off{background:rgba(96,165,250,.08);color:var(--text-muted);}
+.mchip.m-on{background:rgba(96,165,250,.22);color:var(--male);border-color:var(--male);}
+.mchip.f-off{background:rgba(244,114,182,.08);color:var(--text-muted);}
+.mchip.f-on{background:rgba(244,114,182,.22);color:var(--female);border-color:var(--female);}
+
+/* SELECT ALL BTN */
+.sel-all-row{display:flex;gap:7px;margin-bottom:10px;}
+.sel-btn{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:8px;background:none;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+.sel-btn:hover{border-color:var(--yellow);color:var(--yellow);}
+
+/* INPUT */
+.input-row{display:flex;gap:7px;margin-bottom:8px;}
+.inp{flex:1;background:var(--surface2);border:none;border-radius:10px;color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;padding:9px 13px;outline:none;}
+.inp:focus{outline:2px solid var(--yellow);}
+.btn-add{background:var(--yellow);border:none;border-radius:10px;color:#13151a;font-size:22px;font-weight:900;width:42px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.btn-add:hover{background:var(--yellow-dim);}
+
+/* GUEST TAGS */
+.guest-tags{display:flex;flex-wrap:wrap;gap:6px;min-height:4px;}
+.gtag{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;font-size:13px;font-weight:500;animation:popIn .15s ease;}
+@keyframes popIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+.gtag.gm{background:rgba(96,165,250,.2);color:var(--male);}
+.gtag.gf{background:rgba(244,114,182,.2);color:var(--female);}
+.gtag-del{background:none;border:none;color:currentColor;opacity:.45;font-size:15px;cursor:pointer;padding:0;line-height:1;display:flex;align-items:center;}
+.gtag-del:hover{opacity:1;}
+
+/* SUMMARY */
+.summary-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.schip{font-size:12px;color:var(--text-muted);background:var(--surface2);border-radius:8px;padding:4px 10px;}
+.schip strong{color:var(--text);}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0;}
+
+/* COUNT CTRL */
+.count-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+.count-label{font-size:14px;color:var(--text-muted);}
+.count-ctrl{display:flex;align-items:center;background:var(--surface2);border-radius:10px;overflow:hidden;}
+.cbtn{background:none;border:none;color:var(--text);font-size:20px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.cbtn:hover{background:var(--border);}
+.cval{font-family:'Black Han Sans',sans-serif;font-size:20px;color:var(--yellow);min-width:38px;text-align:center;line-height:40px;}
+.court-names{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
+.court-inp{background:var(--surface2);border:none;border-radius:8px;color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:13px;padding:7px 11px;width:115px;outline:none;}
+.court-inp:focus{outline:2px solid var(--yellow);}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;gap:10px;margin-top:12px;}
+.toggle-wrap{display:inline-flex;align-items:center;gap:9px;cursor:pointer;user-select:none;}
+.toggle-wrap input{display:none;}
+.toggle-box{width:40px;height:22px;border-radius:11px;background:var(--border);position:relative;flex-shrink:0;transition:background .2s;}
+.toggle-box::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;}
+.toggle-wrap input:checked~.toggle-box{background:var(--yellow);}
+.toggle-wrap input:checked~.toggle-box::after{transform:translateX(18px);}
+.toggle-text{font-size:13px;font-weight:600;color:var(--text);}
+.toggle-desc{font-size:11px;color:var(--text-muted);font-weight:400;}
+
+/* GENERATE */
+.generate-btn{display:block;width:100%;padding:15px;background:var(--yellow);border:none;border-radius:14px;color:#13151a;font-family:'Black Han Sans',sans-serif;font-size:20px;cursor:pointer;transition:all .2s;margin-top:6px;}
+.generate-btn:hover{background:var(--yellow-dim);transform:translateY(-1px);}
+
+/* ALERT */
+.alert{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);border-radius:10px;padding:11px 14px;font-size:13px;color:var(--danger);margin-bottom:10px;display:none;}
+.alert.show{display:block;}
+
+/* RESULT */
+#result{display:none;}
+#result.visible{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.result-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.result-title{font-family:'Black Han Sans',sans-serif;font-size:22px;color:var(--yellow);}
+.result-actions{display:flex;gap:6px;}
+.act-btn{background:var(--surface);border:none;border-radius:10px;color:var(--text-muted);font-size:12px;padding:7px 13px;cursor:pointer;transition:all .15s;}
+.act-btn:hover{background:var(--surface2);color:var(--text);}
+
+/* ADMIN PIN */
+.admin-lock{text-align:center;padding:32px 16px;}
+.admin-lock-icon{font-size:40px;margin-bottom:12px;}
+.admin-lock-title{font-family:'Black Han Sans',sans-serif;font-size:18px;color:var(--text);margin-bottom:6px;}
+.admin-lock-desc{font-size:12px;color:var(--text-muted);margin-bottom:20px;}
+.pin-row{display:flex;gap:10px;justify-content:center;margin-bottom:14px;}
+.pin-inp{width:52px;height:58px;background:var(--surface2);border:2px solid var(--border);border-radius:12px;color:var(--text);font-size:24px;font-weight:700;text-align:center;outline:none;-webkit-text-security:disc;caret-color:var(--yellow);}
+.pin-inp:focus{border-color:var(--yellow);}
+.pin-submit{width:100%;padding:12px;background:var(--yellow);border:none;border-radius:12px;color:#13151a;font-family:'Black Han Sans',sans-serif;font-size:16px;cursor:pointer;transition:all .15s;margin-top:4px;}
+.pin-submit:hover{background:var(--yellow-dim);}
+.pin-error{font-size:12px;color:var(--danger);text-align:center;margin-top:8px;min-height:18px;}
+.admin-content{display:none;}
+.admin-content.unlocked{display:block;}
+.admin-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding:10px 14px;background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.2);border-radius:10px;}
+.admin-bar-text{font-size:12px;color:var(--yellow);font-weight:600;}
+.admin-logout-btn{font-size:11px;padding:4px 10px;border:1px solid rgba(245,197,24,.3);border-radius:8px;background:none;color:var(--yellow);cursor:pointer;}
+.admin-logout-btn:hover{background:rgba(245,197,24,.1);}
+
+/* SUMMARY BAR */
+.summary-bar{background:var(--surface);border-radius:14px;padding:16px 18px;margin-bottom:12px;}
+.summary-grid{display:flex;flex-wrap:wrap;gap:7px;}
+.splayer{display:flex;align-items:center;gap:6px;background:var(--surface2);border-radius:10px;padding:6px 11px;font-size:13px;}
+.splayer-name{color:var(--text);font-weight:500;}
+.splayer-games{font-family:'Black Han Sans',sans-serif;font-size:18px;color:var(--yellow);line-height:1;}
+.splayer-rest{font-size:11px;color:var(--text-muted);}
+
+/* ROUND */
+.round-block{background:var(--surface);border-radius:14px;margin-bottom:10px;overflow:hidden;}
+.round-hdr{background:var(--surface2);padding:9px 15px;display:flex;align-items:center;justify-content:space-between;}
+.round-num{font-family:'Black Han Sans',sans-serif;font-size:16px;color:var(--yellow);}
+.round-meta{font-size:12px;color:var(--text-muted);}
+
+.court-line{display:flex;align-items:center;padding:11px 15px;gap:9px;border-bottom:1px solid rgba(46,50,80,.5);flex-wrap:wrap;}
+.court-line:last-of-type{border-bottom:none;}
+.cl-name{font-family:'Black Han Sans',sans-serif;font-size:14px;color:var(--yellow);min-width:46px;flex-shrink:0;}
+.cl-badge{font-size:10px;font-weight:700;letter-spacing:.5px;padding:3px 8px;border-radius:8px;flex-shrink:0;text-align:center;white-space:nowrap;}
+.badge-male{background:rgba(96,165,250,.18);color:var(--male);}
+.badge-female{background:rgba(244,114,182,.18);color:var(--female);}
+.badge-mixed{background:rgba(167,139,250,.18);color:var(--mixed);}
+.badge-misc{background:rgba(107,114,128,.18);color:#9ca3af;}
+.cl-matchup{display:flex;align-items:center;gap:6px;flex:1;flex-wrap:wrap;}
+.cl-team{display:flex;gap:4px;flex-wrap:wrap;}
+.cl-vs{font-family:'Black Han Sans',sans-serif;font-size:12px;color:var(--border);flex-shrink:0;}
+.pn{font-size:13px;font-weight:600;} .pn-m{color:var(--male);} .pn-f{color:var(--female);}
+
+.rest-line{padding:8px 15px;background:rgba(0,0,0,.18);display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.rest-lbl{font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;flex-shrink:0;}
+.rest-names{display:flex;flex-wrap:wrap;gap:5px;}
+.rchip{font-size:12px;padding:2px 8px;border-radius:8px;background:rgba(75,80,96,.28);color:var(--rest);}
+
+/* STATS */
+.stats-wrap{overflow-x:auto;}
+.stats-table{width:100%;border-collapse:collapse;font-size:13px;min-width:340px;}
+.stats-table th{background:var(--surface2);color:var(--text-muted);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:9px 10px;text-align:center;border-bottom:1px solid var(--border);}
+.stats-table th:first-child{text-align:left;}
+.stats-table td{padding:9px 10px;border-bottom:1px solid rgba(46,50,80,.35);text-align:center;vertical-align:middle;}
+.stats-table td:first-child{text-align:left;}
+.stats-table tr:last-child td{border-bottom:none;}
+.pname-cell{display:flex;align-items:center;gap:6px;}
+.nc{font-family:'Black Han Sans',sans-serif;font-size:16px;}
+.nc-y{color:var(--yellow);} .nc-b{color:var(--male);} .nc-p{color:var(--female);} .nc-v{color:var(--mixed);} .nc-g{color:var(--text-muted);}
+
+/* MGMT */
+.mgmt-grid{display:flex;flex-wrap:wrap;gap:7px;}
+.mgmt-chip{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:20px;font-size:13px;font-weight:500;}
+.mgmt-chip.gm{background:rgba(96,165,250,.12);color:var(--male);}
+.mgmt-chip.gf{background:rgba(244,114,182,.12);color:var(--female);}
+.mdel{background:none;border:none;color:currentColor;opacity:.4;font-size:15px;cursor:pointer;padding:0;line-height:1;display:flex;align-items:center;}
+.mdel:hover{opacity:1;}
+
+/* MEETING */
+.meeting-month-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.meeting-month-label{font-family:'Black Han Sans',sans-serif;font-size:16px;color:var(--text);}
+.meeting-nav-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--text-muted);padding:4px 10px;cursor:pointer;font-size:14px;transition:all .15s;}
+.meeting-nav-btn:hover{border-color:var(--yellow);color:var(--yellow);}
+.meeting-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.meeting-item{background:var(--surface2);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.meeting-date{font-family:'Black Han Sans',sans-serif;font-size:14px;color:var(--yellow);}
+.meeting-count{font-size:12px;color:var(--text-muted);}
+.meeting-del-btn{background:none;border:none;color:var(--text-muted);font-size:16px;cursor:pointer;opacity:.4;padding:0;}
+.meeting-del-btn:hover{opacity:1;color:var(--danger);}
+.meeting-empty{text-align:center;padding:24px;color:var(--text-muted);font-size:13px;}
+.new-meeting-row{display:flex;gap:7px;margin-bottom:4px;}
+.date-inp{flex:1;background:var(--surface2);border:none;border-radius:10px;color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;padding:9px 13px;outline:none;}
+.date-inp:focus{outline:2px solid var(--yellow);}
+.meeting-add-btn{background:var(--yellow);border:none;border-radius:10px;color:#13151a;font-family:'Black Han Sans',sans-serif;font-size:13px;padding:0 14px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.meeting-add-btn:hover{background:var(--yellow-dim);}
+
+/* ATTEND RATE TABLE */
+.attend-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
+.attend-table th{background:var(--surface2);color:var(--text-muted);font-size:10px;font-weight:700;letter-spacing:.8px;padding:8px 6px;text-align:center;border-bottom:1px solid var(--border);}
+.attend-table th:first-child{text-align:left;width:36%;}
+.attend-table td{padding:9px 6px;border-bottom:1px solid rgba(46,50,80,.3);text-align:center;vertical-align:middle;white-space:nowrap;}
+.attend-table td:first-child{text-align:left;}
+.attend-table tr:last-child td{border-bottom:none;}
+.attend-ok{color:#4ade80;font-weight:700;}
+.attend-warn{color:var(--yellow);font-weight:700;}
+.attend-bad{color:var(--danger);font-weight:700;}
+.month-tab-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.month-tab{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:8px;background:none;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+.month-tab.active{background:var(--yellow);color:#13151a;border-color:var(--yellow);}
+.close-meeting-btn{display:block;width:100%;padding:11px;background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.25);border-radius:10px;color:#4ade80;font-family:'Black Han Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .15s;margin-top:4px;}
+.close-meeting-btn:hover{background:rgba(74,222,128,.22);}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+/* INSTALL BTN */
+.install-bar{
+  position:fixed; bottom:0; left:0; right:0;
+  display:flex; justify-content:center; align-items:center;
+  padding:12px 16px 20px;
+  background:linear-gradient(to top, var(--bg) 70%, transparent);
+  z-index:100; pointer-events:none;
+}
+.install-btn{
+  pointer-events:all;
+  display:flex; align-items:center; gap:8px;
+  background:var(--yellow); border:none; border-radius:24px;
+  color:#13151a; font-family:'Black Han Sans',sans-serif; font-size:15px;
+  padding:11px 24px; cursor:pointer; box-shadow:0 4px 20px rgba(245,197,24,.4);
+  transition:all .2s;
+}
+.install-btn:hover{background:var(--yellow-dim); transform:translateY(-1px);}
+.install-btn.hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header>
+  <div class="logo">🎾 트러스<small>테니스 조편성</small></div>
+  <div class="subtitle">복식 게임 · 공정 배분 시스템</div>
+</header>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('attend',this)">출석</button>
+  <button class="tab-btn" onclick="switchTab('setting',this)">설정</button>
+  <button class="tab-btn" onclick="switchTab('meeting',this)">모임</button>
+  <button class="tab-btn" onclick="switchTab('ranking',this)">랭킹</button>
+  <button class="tab-btn" onclick="switchTab('mgmt',this)">회원관리</button>
+</div>
+
+<!-- ══ 탭: 모임 관리 ══ -->
+<div class="panel" id="tab-meeting">
+
+  <!-- 모임 생성 (관리자) -->
+  <div class="card">
+    <div class="card-title">📅 모임 관리</div>
+    <div class="meeting-month-hdr">
+      <button class="meeting-nav-btn" onclick="meetingMonthMove(-1)">◀</button>
+      <span class="meeting-month-label" id="meetingMonthLabel"></span>
+      <button class="meeting-nav-btn" onclick="meetingMonthMove(1)">▶</button>
+    </div>
+    <div class="meeting-list" id="meetingList"></div>
+
+    <!-- 관리자만: 모임 추가 -->
+    <div id="meetingAdminArea">
+      <div id="meetingAddLocked" style="text-align:center;padding:6px 0 2px">
+        <button class="sel-btn" onclick="adminAction('unlockMeeting')" style="font-size:12px;padding:6px 16px">🔒 관리자 — 모임 추가</button>
+      </div>
+      <div id="meetingAddForm" style="display:none">
+        <div class="new-meeting-row">
+          <input class="date-inp" type="date" id="newMeetingDate">
+          <button class="meeting-add-btn" onclick="addMeeting()">추가</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+
+<!-- ══ 탭1: 출석 선택 ══ -->
+<div class="panel active" id="tab-attend">
+
+  <div class="card">
+    <div class="card-title">📋 오늘 참석 회원 선택</div>
+
+    <div class="sec-label m"><span class="dot dot-m"></span>남자 회원</div>
+    <div class="sel-all-row">
+      <button class="sel-btn" onclick="selectAll('m',true)">전체 선택</button>
+      <button class="sel-btn" onclick="selectAll('m',false)">전체 해제</button>
+    </div>
+    <div class="member-grid" id="maleGrid"></div>
+
+    <hr class="divider">
+
+    <div class="sec-label f"><span class="dot dot-f"></span>여자 회원</div>
+    <div class="sel-all-row">
+      <button class="sel-btn" onclick="selectAll('f',true)">전체 선택</button>
+      <button class="sel-btn" onclick="selectAll('f',false)">전체 해제</button>
+    </div>
+    <div class="member-grid" id="femaleGrid"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">👤 게스트 추가</div>
+
+    <div class="sec-label m"><span class="dot dot-m"></span>남자 게스트</div>
+    <div class="input-row">
+      <input class="inp" id="guestMaleInp" placeholder="이름 입력 (쉼표로 여러 명)" onkeydown="if(event.key==='Enter')addGuest('m')">
+      <button class="btn-add" onclick="addGuest('m')">+</button>
+    </div>
+    <div class="guest-tags" id="guestMaleTags" style="margin-bottom:14px"></div>
+
+    <hr class="divider">
+
+    <div class="sec-label f"><span class="dot dot-f"></span>여자 게스트</div>
+    <div class="input-row">
+      <input class="inp" id="guestFemaleInp" placeholder="이름 입력 (쉼표로 여러 명)" onkeydown="if(event.key==='Enter')addGuest('f')">
+      <button class="btn-add" onclick="addGuest('f')">+</button>
+    </div>
+    <div class="guest-tags" id="guestFemaleTags"></div>
+
+    <div class="summary-chips" id="attendSummary"></div>
+  </div>
+
+</div>
+
+<!-- ══ 탭2: 게임 설정 ══ -->
+<div class="panel" id="tab-setting">
+
+  <div class="card">
+    <div class="card-title">🎾 코트 설정</div>
+    <div class="count-row">
+      <span class="count-label">코트 수</span>
+      <div class="count-ctrl">
+        <button class="cbtn" onclick="changeCourts(-1)">−</button>
+        <div class="cval" id="courtCount">2</div>
+        <button class="cbtn" onclick="changeCourts(1)">+</button>
+      </div>
+    </div>
+    <div class="court-names" id="courtNamesRow"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔄 라운드 설정</div>
+    <div class="count-row">
+      <span class="count-label">총 라운드 수</span>
+      <div class="count-ctrl">
+        <button class="cbtn" onclick="changeRounds(-1)">−</button>
+        <div class="cval" id="roundCount">7</div>
+        <button class="cbtn" onclick="changeRounds(1)">+</button>
+      </div>
+    </div>
+    <div class="toggle-row">
+      <label class="toggle-wrap">
+        <input type="checkbox" id="allowMisc" checked>
+        <span class="toggle-box"></span>
+        <span class="toggle-text">잡복 허용 <span class="toggle-desc">(성비 불균형 시 혼용)</span></span>
+      </label>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ 탭3: 랭킹 ══ -->
+<div class="panel" id="tab-ranking">
+  <div class="card">
+    <div class="rank-header-row">
+      <div class="card-title" style="margin-bottom:0">🏆 누적 랭킹</div>
+      <button class="rank-reset-btn" onclick="adminAction('resetRanking')">초기화</button>
+    </div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;">승 +2점 · 무 +1점 · 패 −1점 · 게스트 미반영</div>
+    <div class="stats-wrap">
+      <table class="rank-table" id="rankTable">
+        <thead><tr>
+          <th>순위</th>
+          <th>승/무/패</th>
+          <th>승점<br><span style="font-weight:400;font-size:9px">(전체/평균)</span></th>
+          <th>득실</th>
+          <th>승률</th>
+        </tr></thead>
+        <tbody id="rankBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 탭4: 회원 관리 ══ -->
+<div class="panel" id="tab-mgmt">
+
+  <!-- 잠금 화면 -->
+  <div class="card" id="mgmtLock">
+    <div class="admin-lock">
+      <div class="admin-lock-icon">🔒</div>
+      <div class="admin-lock-title">관리자 전용</div>
+      <div class="admin-lock-desc">회원 추가·삭제는 관리자만 가능합니다<br>PIN 4자리를 입력하세요</div>
+      <div class="pin-row">
+        <input class="pin-inp" id="pin1" type="password" maxlength="1" inputmode="numeric" oninput="pinMove(this,'pin2')">
+        <input class="pin-inp" id="pin2" type="password" maxlength="1" inputmode="numeric" oninput="pinMove(this,'pin3')" onkeydown="pinBack(event,'pin1')">
+        <input class="pin-inp" id="pin3" type="password" maxlength="1" inputmode="numeric" oninput="pinMove(this,'pin4')" onkeydown="pinBack(event,'pin2')">
+        <input class="pin-inp" id="pin4" type="password" maxlength="1" inputmode="numeric" oninput="pinMove(this,null)" onkeydown="pinBack(event,'pin3')">
+      </div>
+      <button class="pin-submit" onclick="checkPin()">확인</button>
+      <div class="pin-error" id="pinError"></div>
+    </div>
+  </div>
+
+  <!-- 관리자 컨텐츠 -->
+  <div id="mgmtContent" class="admin-content">
+    <div class="admin-bar">
+      <span class="admin-bar-text">🔓 관리자 모드</span>
+      <button class="admin-logout-btn" onclick="adminLogout()">잠금</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚙️ 회원 관리</div>
+
+      <div class="sec-label m"><span class="dot dot-m"></span>남자 회원 추가</div>
+      <div class="input-row">
+        <input class="inp" id="newMaleInp" placeholder="이름 입력 (쉼표로 여러 명)" onkeydown="if(event.key==='Enter')addMember('m')">
+        <button class="btn-add" onclick="addMember('m')">+</button>
+      </div>
+      <div class="mgmt-grid" id="maleMgmt" style="margin-bottom:18px"></div>
+
+      <hr class="divider">
+
+      <div class="sec-label f"><span class="dot dot-f"></span>여자 회원 추가</div>
+      <div class="input-row">
+        <input class="inp" id="newFemaleInp" placeholder="이름 입력 (쉼표로 여러 명)" onkeydown="if(event.key==='Enter')addMember('f')">
+        <button class="btn-add" onclick="addMember('f')">+</button>
+      </div>
+      <div class="mgmt-grid" id="femaleMgmt"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="alert" id="alertBox"></div>
+<button class="generate-btn" onclick="generate()">⚡ 조 편성 생성</button>
+
+<!-- RESULT -->
+<div id="result">
+  <div class="result-header">
+    <div class="result-title">📋 조 편성 결과</div>
+    <div class="result-actions">
+      <button class="act-btn" onclick="generate()">🔀 재생성</button>
+      <button class="act-btn" onclick="window.print()">🖨️ 인쇄</button>
+    </div>
+  </div>
+  <div id="roundsOutput"></div>
+  <div class="card" style="margin-top:10px">
+    <div class="card-title">📊 선수별 통계</div>
+    <div class="stats-wrap"><table class="stats-table" id="statsTable"></table></div>
+  </div>
+</div>
+
+</div>
+<script>
+// ── DATA ──
+let memberMales   = ['장동운','고문식','김도현','김룡현','김민성','김영한','남승현','당지우','백종흠','송시헌','심은보','유상현','이병진','이준용','정용우','이현정','정재평','권준석','최준용'];
+let memberFemales = ['장미정','하다영','남궁혜리','양혜림','변진솔','황연희','안세은','박진','김민경','구주원'];
+
+let attendMales   = new Set();
+let attendFemales = new Set();
+let guestMales    = [];
+let guestFemales  = [];
+
+let courts     = 2;
+let courtNames = ['코트 A','코트 B'];
+let rounds     = 7;
+
+// 랭킹 데이터: { [name]: { w, d, l, scored, conceded, games } }
+let rankData = {};
+
+function allMembers() { return [...memberMales, ...memberFemales]; }
+
+function initRankData() {
+  allMembers().forEach(name => {
+    if (!rankData[name]) rankData[name] = { w:0, d:0, l:0, scored:0, conceded:0, games:0 };
+  });
+  // 삭제된 회원 제거
+  Object.keys(rankData).forEach(k => { if (!allMembers().includes(k)) delete rankData[k]; });
+}
+
+function resetRanking() {
+  if (!confirm('랭킹을 초기화하시겠습니까?')) return;
+  rankData = {};
+  initRankData();
+  saveData();
+  renderRankTable();
+}
+
+// 저장된 게임 편성 (점수 입력용)
+let lastGeneratedRounds = [];
+let lastMales = [], lastFemales = [];
+let roundScoreSaved = [];
+
+// ── MEETING DATA ──
+// meetings: [ { date:'2025-05-10', attendees:['장동운',...], closed:false } ]
+let meetings = [];
+let meetingViewYear  = new Date().getFullYear();
+let meetingViewMonth = new Date().getMonth(); // 0-based
+let selectedAttendRateMonth = null; // 'YYYY-MM'
+
+// 오늘 날짜 (로컬 기준)
+function todayStr() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+function meetingMonthMove(d) {
+  meetingViewMonth += d;
+  if (meetingViewMonth > 11) { meetingViewMonth = 0; meetingViewYear++; }
+  if (meetingViewMonth < 0)  { meetingViewMonth = 11; meetingViewYear--; }
+  renderMeetingPanel();
+}
+
+function renderMeetingPanel() {
+  const y = meetingViewYear, m = meetingViewMonth;
+  const label = `${y}년 ${m+1}월`;
+  document.getElementById('meetingMonthLabel').textContent = label;
+
+  // 해당 월 모임 목록
+  const monthKey = `${y}-${String(m+1).padStart(2,'0')}`;
+  const monthMeetings = meetings
+    .filter(mt => mt.date.startsWith(monthKey))
+    .sort((a,b) => a.date.localeCompare(b.date));
+
+  const listEl = document.getElementById('meetingList');
+  if (monthMeetings.length === 0) {
+    listEl.innerHTML = `<div class="meeting-empty">이번 달 모임이 없습니다</div>`;
+  } else {
+    listEl.innerHTML = monthMeetings.map(mt => {
+      const dateLabel = mt.date.replace(/-/g,'. ');
+      const cnt = mt.attendees.length;
+      const closedBadge = mt.closed
+        ? `<span style="font-size:11px;color:#4ade80;margin-left:6px">✓ 확정</span>`
+        : `<span style="font-size:11px;color:var(--yellow);margin-left:6px">진행중</span>`;
+      const delBtn = isAdmin
+        ? `<button class="meeting-del-btn" onclick="deleteMeeting('${mt.date}')">×</button>` : '';
+      return `<div class="meeting-item">
+        <div>
+          <span class="meeting-date">${dateLabel}</span>${closedBadge}
+          <div class="meeting-count" style="margin-top:3px">참석 ${cnt}명</div>
+        </div>
+        ${delBtn}
+      </div>`;
+    }).join('');
+  }
+
+  // 출석 확정 카드 - 항상 표시, 내용만 업데이트
+  const members = [...attendMales, ...attendFemales].filter(n => allMembers().includes(n));
+  const attendEl = document.getElementById('closeMeetingAttendees');
+  const dateInfo = document.getElementById('closeMeetingDateInfo');
+  if (attendEl) {
+    attendEl.textContent = members.length > 0
+      ? `${members.join(', ')} (${members.length}명)`
+      : '출석 탭에서 참석 회원을 먼저 선택하세요';
+  }
+  // 오늘 날짜 모임 등록 여부 안내
+  const todayMeeting = meetings.find(mt => mt.date === todayStr());
+  if (dateInfo) {
+    if (!todayMeeting) {
+      dateInfo.textContent = `📅 오늘(${todayStr()}) 모임이 등록되어 있지 않습니다. 확정 시 자동 생성됩니다.`;
+    } else if (todayMeeting.closed) {
+      dateInfo.textContent = `✅ 오늘 모임은 이미 출석 확정되었습니다.`;
+    } else {
+      dateInfo.textContent = `📅 오늘(${todayStr()}) 모임이 등록되어 있습니다.`;
+    }
+  }
+
+  // 날짜 input 기본값
+  const dateInp = document.getElementById('newMeetingDate');
+  if (dateInp) dateInp.value = todayStr();
+
+  // 참석률 월 탭 렌더
+  renderAttendMonthTabs();
+}
+
+function addMeeting() {
+  if (!isAdmin) return;
+  const date = document.getElementById('newMeetingDate').value;
+  if (!date) return;
+  if (meetings.find(mt => mt.date === date)) {
+    alert('이미 같은 날짜의 모임이 있습니다.'); return;
+  }
+  meetings.push({ date, attendees: [], closed: false });
+  meetings.sort((a,b) => a.date.localeCompare(b.date));
+  saveData();
+  renderMeetingPanel();
+}
+
+function deleteMeeting(date) {
+  if (!isAdmin) return;
+  if (!confirm(`${date} 모임을 삭제하시겠습니까?\n이미 반영된 참가횟수는 되돌려지지 않습니다.`)) return;
+  meetings = meetings.filter(mt => mt.date !== date);
+  saveData();
+  renderMeetingPanel();
+}
+
+function closeMeeting() {
+  const memberAttendees = [...attendMales, ...attendFemales]
+    .filter(n => allMembers().includes(n));
+
+  if (memberAttendees.length === 0) {
+    alert('출석 탭에서 참석 회원을 먼저 선택해주세요.'); return;
+  }
+
+  const today = todayStr();
+  let todayMeeting = meetings.find(mt => mt.date === today);
+
+  if (todayMeeting && todayMeeting.closed) {
+    if (!confirm('오늘 모임은 이미 확정되었습니다.\n다시 반영하면 중복 카운트됩니다.\n그래도 진행하시겠습니까?')) return;
+  } else {
+    if (!confirm(`${memberAttendees.join(', ')} (${memberAttendees.length}명)\n\n참가횟수 +1 반영하시겠습니까?`)) return;
+  }
+
+  // 오늘 모임 없으면 자동 생성
+  if (!todayMeeting) {
+    todayMeeting = { date: today, attendees: [], closed: false };
+    meetings.push(todayMeeting);
+    meetings.sort((a,b) => a.date.localeCompare(b.date));
+  }
+
+  todayMeeting.attendees = [...memberAttendees];
+  todayMeeting.closed = true;
+
+  // 참가횟수 직접 반영
+  memberAttendees.forEach(name => {
+    if (!rankData[name]) rankData[name] = {w:0, d:0, l:0, scored:0, conceded:0, games:0};
+    rankData[name].games++;
+  });
+
+  renderMeetingPanel();
+  renderRankTable();
+  saveData();
+  alert(`✅ 출석 확정 완료! (${memberAttendees.length}명 참가횟수 +1)`);
+}
+
+// 참석률 월 탭
+function renderAttendMonthTabs() {
+  // 모임이 있는 월 목록 추출
+  const monthSet = new Set(meetings.map(mt => mt.date.slice(0,7)));
+  const months = [...monthSet].sort().reverse();
+
+  if (!selectedAttendRateMonth || !months.includes(selectedAttendRateMonth)) {
+    selectedAttendRateMonth = months[0] || null;
+  }
+
+  const tabRow = document.getElementById('attendMonthTabs');
+  if (months.length === 0) {
+    tabRow.innerHTML = `<span style="font-size:12px;color:var(--text-muted)">모임 데이터가 없습니다</span>`;
+    document.getElementById('attendRateBody').innerHTML = '';
+    return;
+  }
+
+  tabRow.innerHTML = months.map(ym => {
+    const [y,mo] = ym.split('-');
+    const label = `${y}.${mo}`;
+    return `<button class="month-tab ${ym===selectedAttendRateMonth?'active':''}"
+      onclick="selectAttendMonth('${ym}')">${label}</button>`;
+  }).join('');
+
+  renderAttendRateTable();
+}
+
+function selectAttendMonth(ym) {
+  selectedAttendRateMonth = ym;
+  renderAttendMonthTabs();
+}
+
+function renderAttendRateTable() {
+  if (!selectedAttendRateMonth) return;
+  const monthMeetings = meetings.filter(mt =>
+    mt.date.startsWith(selectedAttendRateMonth) && mt.closed
+  );
+  const totalMeetings = monthMeetings.length;
+
+  const tbody = document.getElementById('attendRateBody');
+  if (totalMeetings === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:16px">확정된 모임이 없습니다</td></tr>`;
+    return;
+  }
+
+  const members = allMembers();
+  const rows = members.map(name => {
+    const attended = monthMeetings.filter(mt => mt.attendees.includes(name)).length;
+    const rate = Math.round((attended / totalMeetings) * 100);
+    const isMale = memberMales.includes(name);
+    return { name, isMale, attended, total: totalMeetings, rate };
+  });
+
+  // 참석 많은 순 정렬
+  rows.sort((a,b) => b.attended - a.attended || a.name.localeCompare(b.name));
+
+  tbody.innerHTML = rows.map(r => {
+    const rateCls = r.attended >= 2 ? 'attend-ok' : r.attended === 1 ? 'attend-warn' : 'attend-bad';
+    const icon = r.isMale ? '🔵' : '🔴';
+    const mark = r.attended >= 2 ? '✅' : r.attended === 1 ? '⚠️' : '❌';
+    return `<tr>
+      <td><span style="font-size:11px">${icon}</span> ${r.name}</td>
+      <td class="${rateCls}">${r.attended}회 ${mark}</td>
+      <td style="color:var(--text-muted)">${r.total}회</td>
+      <td class="${rateCls}">${rate}%</td>
+    </tr>`;
+  }).join('');
+} // 라운드별 저장 여부
+
+// ── ADMIN PIN ──
+const ADMIN_PIN = '1234'; // ← 여기서 PIN 변경
+let isAdmin = false;
+let pendingAction = null;
+
+function pinMove(el, nextId) {
+  if (el.value.length === 1 && nextId) {
+    document.getElementById(nextId).focus();
+  }
+  document.getElementById('pinError').textContent = '';
+}
+
+function pinBack(e, prevId) {
+  if (e.key === 'Backspace' && e.target.value === '') {
+    document.getElementById(prevId)?.focus();
+  }
+}
+
+function checkPin() {
+  const pin = ['pin1','pin2','pin3','pin4'].map(id => document.getElementById(id).value).join('');
+  if (pin === ADMIN_PIN) {
+    isAdmin = true;
+    document.getElementById('mgmtLock').style.display = 'none';
+    document.getElementById('mgmtContent').classList.add('unlocked');
+    ['pin1','pin2','pin3','pin4'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('pinError').textContent = '';
+    // 대기 중인 액션 실행
+    if (pendingAction) { pendingAction(); pendingAction = null; }
+  } else {
+    document.getElementById('pinError').textContent = '❌ PIN이 올바르지 않습니다';
+    ['pin1','pin2','pin3','pin4'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('pin1').focus();
+  }
+}
+
+function adminLogout() {
+  isAdmin = false;
+  document.getElementById('mgmtLock').style.display = 'block';
+  document.getElementById('mgmtContent').classList.remove('unlocked');
+}
+
+// 관리자 권한이 필요한 액션
+function adminAction(action) {
+  if (isAdmin) {
+    if (action === 'resetRanking') resetRanking();
+    if (action === 'unlockMeeting') showMeetingAddForm();
+  } else {
+    pendingAction = () => {
+      if (action === 'resetRanking') resetRanking();
+      if (action === 'unlockMeeting') showMeetingAddForm();
+    };
+    showPinModal();
+  }
+}
+
+function showMeetingAddForm() {
+  document.getElementById('meetingAddLocked').style.display = 'none';
+  document.getElementById('meetingAddForm').style.display = 'block';
+}
+
+function showPinModal() {
+  // 인라인 모달로 PIN 입력 요청
+  const overlay = document.createElement('div');
+  overlay.id = 'pinOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  overlay.innerHTML = `<div style="background:var(--surface);border-radius:16px;padding:28px 24px;width:100%;max-width:320px;text-align:center;">
+    <div style="font-size:32px;margin-bottom:10px">🔒</div>
+    <div style="font-family:'Black Han Sans',sans-serif;font-size:18px;margin-bottom:6px;color:var(--text)">관리자 인증</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:18px">PIN 4자리를 입력하세요</div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:14px">
+      <input class="pin-inp" id="mp1" type="password" maxlength="1" inputmode="numeric" oninput="if(this.value)document.getElementById('mp2').focus()">
+      <input class="pin-inp" id="mp2" type="password" maxlength="1" inputmode="numeric" oninput="if(this.value)document.getElementById('mp3').focus()" onkeydown="if(event.key==='Backspace'&&!this.value)document.getElementById('mp1').focus()">
+      <input class="pin-inp" id="mp3" type="password" maxlength="1" inputmode="numeric" oninput="if(this.value)document.getElementById('mp4').focus()" onkeydown="if(event.key==='Backspace'&&!this.value)document.getElementById('mp2').focus()">
+      <input class="pin-inp" id="mp4" type="password" maxlength="1" inputmode="numeric" onkeydown="if(event.key==='Backspace'&&!this.value)document.getElementById('mp3').focus()">
+    </div>
+    <button class="pin-submit" onclick="checkModalPin()">확인</button>
+    <div class="pin-error" id="mpError"></div>
+    <button onclick="document.getElementById('pinOverlay').remove();pendingAction=null;" style="margin-top:12px;background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;">취소</button>
+  </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('mp1')?.focus(), 100);
+}
+
+function checkModalPin() {
+  const pin = ['mp1','mp2','mp3','mp4'].map(id => document.getElementById(id)?.value||'').join('');
+  if (pin === ADMIN_PIN) {
+    isAdmin = true;
+    document.getElementById('pinOverlay')?.remove();
+    if (pendingAction) { pendingAction(); pendingAction = null; }
+  } else {
+    document.getElementById('mpError').textContent = '❌ PIN이 올바르지 않습니다';
+    ['mp1','mp2','mp3','mp4'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('mp1')?.focus();
+  }
+}
+function switchTab(tab, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+  if (tab === 'mgmt') {
+    document.getElementById('mgmtLock').style.display = isAdmin ? 'none' : 'block';
+    document.getElementById('mgmtContent').classList.toggle('unlocked', isAdmin);
+  }
+  if (tab === 'meeting') renderMeetingPanel();
+}
+
+// ── ATTEND GRID ──
+function renderAttendGrid() {
+  renderGrid('maleGrid', memberMales, 'm', attendMales);
+  renderGrid('femaleGrid', memberFemales, 'f', attendFemales);
+  renderAttendSummary();
+}
+
+function renderGrid(id, members, g, attendSet) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  members.forEach(name => {
+    const on = attendSet.has(name);
+    const chip = document.createElement('div');
+    chip.className = `mchip ${g}-${on?'on':'off'}`;
+    chip.textContent = name;
+    chip.onclick = () => {
+      if (attendSet.has(name)) attendSet.delete(name); else attendSet.add(name);
+      renderAttendGrid();
+    };
+    el.appendChild(chip);
+  });
+}
+
+function selectAll(g, val) {
+  const arr = g === 'm' ? memberMales : memberFemales;
+  const set = g === 'm' ? attendMales : attendFemales;
+  arr.forEach(n => val ? set.add(n) : set.delete(n));
+  renderAttendGrid();
+}
+
+function renderAttendSummary() {
+  const tm = attendMales.size + guestMales.length;
+  const tf = attendFemales.size + guestFemales.length;
+  document.getElementById('attendSummary').innerHTML = `
+    <div class="schip">남자 <strong>${tm}</strong>명</div>
+    <div class="schip">여자 <strong>${tf}</strong>명</div>
+    <div class="schip">합계 <strong>${tm+tf}</strong>명</div>`;
+}
+
+// ── GUEST ──
+function addGuest(g) {
+  const inp = document.getElementById(g==='m'?'guestMaleInp':'guestFemaleInp');
+  const arr = g === 'm' ? guestMales : guestFemales;
+  inp.value.split(/[,，]/).map(s=>s.trim()).filter(Boolean).forEach(n=>{ if(!arr.includes(n)) arr.push(n); });
+  inp.value = '';
+  renderGuestTags(); renderAttendSummary();
+}
+
+function removeGuest(g, name) {
+  if (g==='m') guestMales = guestMales.filter(n=>n!==name);
+  else guestFemales = guestFemales.filter(n=>n!==name);
+  renderGuestTags(); renderAttendSummary();
+}
+
+function renderGuestTags() {
+  renderGuestList('guestMaleTags', guestMales, 'm');
+  renderGuestList('guestFemaleTags', guestFemales, 'f');
+}
+
+function renderGuestList(id, arr, g) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  arr.forEach(name => {
+    const tag = document.createElement('span');
+    tag.className = `gtag g${g}`;
+    tag.innerHTML = `${name} <button class="gtag-del" onclick="removeGuest('${g}','${name}')">×</button>`;
+    el.appendChild(tag);
+  });
+}
+
+// ── MEMBER MGMT ──
+function addMember(g) {
+  const inp = document.getElementById(g==='m'?'newMaleInp':'newFemaleInp');
+  const arr = g === 'm' ? memberMales : memberFemales;
+  inp.value.split(/[,，]/).map(s=>s.trim()).filter(Boolean).forEach(n=>{ if(!arr.includes(n)) arr.push(n); });
+  inp.value = '';
+  initRankData(); saveData(); renderRankTable();
+  renderMgmt(); renderAttendGrid();
+}
+
+function removeMember(g, name) {
+  if (g==='m') { memberMales=memberMales.filter(n=>n!==name); attendMales.delete(name); }
+  else { memberFemales=memberFemales.filter(n=>n!==name); attendFemales.delete(name); }
+  delete rankData[name];
+  saveData(); renderMgmt(); renderAttendGrid(); renderRankTable();
+}
+
+function renderMgmt() {
+  renderMgmtList('maleMgmt', memberMales, 'm');
+  renderMgmtList('femaleMgmt', memberFemales, 'f');
+}
+
+function renderMgmtList(id, arr, g) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  arr.forEach(name => {
+    const chip = document.createElement('span');
+    chip.className = `mgmt-chip g${g}`;
+    chip.innerHTML = `${name} <button class="mdel" onclick="removeMember('${g}','${name}')">×</button>`;
+    el.appendChild(chip);
+  });
+}
+
+// ── COURT / ROUND ──
+function changeCourts(d) {
+  courts = Math.max(1, Math.min(6, courts+d));
+  document.getElementById('courtCount').textContent = courts;
+  while (courtNames.length < courts) courtNames.push('코트 '+String.fromCharCode(65+courtNames.length));
+  courtNames.length = courts;
+  renderCourtNames();
+}
+
+function renderCourtNames() {
+  const row = document.getElementById('courtNamesRow');
+  row.innerHTML = '';
+  for (let i=0; i<courts; i++) {
+    const inp = document.createElement('input');
+    inp.className = 'court-inp'; inp.value = courtNames[i];
+    const idx = i;
+    inp.oninput = () => { courtNames[idx] = inp.value || ('코트 '+String.fromCharCode(65+idx)); };
+    row.appendChild(inp);
+  }
+}
+
+function changeRounds(d) {
+  rounds = Math.max(1, Math.min(30, rounds+d));
+  document.getElementById('roundCount').textContent = rounds;
+}
+
+// ── ALGORITHM ──
+function showAlert(msg) {
+  const b = document.getElementById('alertBox');
+  b.textContent = msg; b.classList.toggle('show', !!msg);
+}
+
+function shuffle(arr) {
+  const a=[...arr];
+  for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function getGameType(t1, t2, mSet) {
+  const all=[...t1,...t2];
+  const mc=all.filter(p=>mSet.has(p)).length, fc=all.length-mc;
+  if(mc===4)return'male'; if(fc===4)return'female';
+  if(mc===2&&fc===2)return'mixed'; return'misc';
+}
+
+function incMap(map, a, b) {
+  if(!map[a])map[a]={}; map[a][b]=(map[a][b]||0)+1;
+  if(!map[b])map[b]={}; map[b][a]=(map[b][a]||0)+1;
+}
+
+function generate() {
+  showAlert('');
+  const males   = [...attendMales,   ...guestMales];
+  const females = [...attendFemales, ...guestFemales];
+  const all     = [...males, ...females];
+  const total   = all.length;
+  const mSet    = new Set(males);
+
+  if (total<4)           { showAlert('⚠️ 최소 4명 이상 참석 선택해주세요.'); return; }
+  if (total<courts*4)   { showAlert(`⚠️ 코트 ${courts}개는 최소 ${courts*4}명 필요합니다.`); return; }
+
+  const gameCount={}, restCount={}, partnerCnt={}, oppCnt={}, typeCnt={}, consRest={};
+  all.forEach(p=>{
+    gameCount[p]=0; restCount[p]=0; consRest[p]=0;
+    partnerCnt[p]={}; oppCnt[p]={};
+    typeCnt[p]={male:0,female:0,mixed:0,misc:0};
+  });
+
+  const perRound  = courts*4;
+  const allowMisc = document.getElementById('allowMisc').checked;
+
+  // 혼복 20% 목표
+  const totalGames  = rounds*courts;
+  const mixedTarget = Math.round(totalGames*0.20);
+  let mixedDone = 0;
+
+  const generatedRounds = [];
+
+  for (let r=0; r<rounds; r++) {
+    let players;
+
+    if (total<=perRound) {
+      players = shuffle(all);
+    } else {
+      // 게임 수 적은 순, 동점 → 연속 휴식 많은 순, 그룹 내 셔플
+      const sorted = [...all].sort((a,b)=>
+        gameCount[a]!==gameCount[b] ? gameCount[a]-gameCount[b] : consRest[b]-consRest[a]
+      );
+      const groups=[], visited=new Set();
+      sorted.forEach(p=>{
+        if(visited.has(p))return;
+        const g=sorted.filter(q=>gameCount[q]===gameCount[p]&&!visited.has(q));
+        g.forEach(q=>visited.add(q)); groups.push(shuffle(g));
+      });
+      const fair = groups.flat();
+
+      // 연속 1회 이상 쉰 사람 최우선
+      const must = fair.filter(p=>consRest[p]>=1);
+      const rest = fair.filter(p=>consRest[p]<1);
+      players = [];
+      for (const p of must) { if(players.length<perRound) players.push(p); }
+      for (const p of rest) {
+        if(players.length>=perRound) break;
+        if(!players.includes(p)) players.push(p);
+      }
+    }
+
+    const resting = all.filter(p=>!players.includes(p));
+
+    // 남은 라운드 기준으로 이번 라운드 혼복 할당 수 결정 (20% 목표)
+    const roundsLeft = rounds - r;
+    const mixedLeft  = mixedTarget - mixedDone;
+    const mixedThisRound = Math.min(
+      Math.round(mixedLeft / roundsLeft),
+      Math.floor(courts / 2) + (courts % 2 === 1 ? 1 : 0),
+      Math.floor(players.filter(p=>males.includes(p)).length / 2),
+      Math.floor(players.filter(p=>females.includes(p)).length / 2)
+    );
+
+    const courtGames = buildCourts(players, males, females, mSet, partnerCnt, oppCnt, Math.max(0,mixedThisRound), allowMisc);
+
+    courtGames.forEach(game=>{
+      const type=getGameType(game.team1, game.team2, mSet);
+      if(type==='mixed') mixedDone++;
+      [...game.team1,...game.team2].forEach(p=>{
+        gameCount[p]++; typeCnt[p][type]++; consRest[p]=0;
+        const myTeam=game.team1.includes(p)?game.team1:game.team2;
+        const partner=myTeam.find(x=>x!==p);
+        if(partner) incMap(partnerCnt,p,partner);
+        const oppTeam=game.team1.includes(p)?game.team2:game.team1;
+        oppTeam.forEach(o=>incMap(oppCnt,p,o));
+      });
+    });
+    resting.forEach(p=>{ restCount[p]++; consRest[p]++; });
+
+    generatedRounds.push({ courts:courtGames, resting });
+  }
+
+  lastGeneratedRounds = generatedRounds;
+  lastMales = males;
+  lastFemales = females;
+  roundScoreSaved = new Array(rounds).fill(false);
+
+  renderResult(generatedRounds, gameCount, restCount, typeCnt, all, mSet);
+}
+
+function buildCourts(players, mList, fList, mSet, partnerCnt, oppCnt, mixedAllow, allowMisc) {
+  const shuffled = shuffle(players);
+  const mPlayers = shuffled.filter(p=>mList.includes(p));
+  const fPlayers = shuffled.filter(p=>fList.includes(p));
+  const numCourts= courts;
+  const games    = [];
+  const assigned = new Set();
+
+  // 가능한 모든 페어 중 가장 적게 만난 횟수(minCount) 기준으로 선택
+  // → 모든 조합을 최소 1회씩 소진한 뒤 반복 매칭
+  function bestPair(pool) {
+    const avail = pool.filter(p => !assigned.has(p));
+    if (avail.length < 2) return null;
+    let best = null, bestS = Infinity;
+    for (let i = 0; i < avail.length; i++) {
+      for (let j = i + 1; j < avail.length; j++) {
+        const s = (partnerCnt[avail[i]]?.[avail[j]] || 0);
+        if (s < bestS) { bestS = s; best = [avail[i], avail[j]]; }
+      }
+    }
+    return best;
+  }
+
+  // 4명 pool에서 최적 두 팀 구성 (파트너 중복 최소화)
+  function bestFourSplit(pool) {
+    const avail = pool.filter(p => !assigned.has(p));
+    if (avail.length < 4) return null;
+    // 4명 중 페어 조합은 3가지 (ab|cd, ac|bd, ad|bc)
+    const [a, b, c, d] = avail;
+    const combos = [
+      { t1:[a,b], t2:[c,d], s:(partnerCnt[a]?.[b]||0)+(partnerCnt[c]?.[d]||0) },
+      { t1:[a,c], t2:[b,d], s:(partnerCnt[a]?.[c]||0)+(partnerCnt[b]?.[d]||0) },
+      { t1:[a,d], t2:[b,c], s:(partnerCnt[a]?.[d]||0)+(partnerCnt[b]?.[c]||0) },
+    ];
+    combos.sort((x,y) => x.s - y.s);
+    return combos[0];
+  }
+
+  function tryMixed() {
+    const mA = mPlayers.filter(p => !assigned.has(p));
+    const fA = fPlayers.filter(p => !assigned.has(p));
+    if (mA.length < 2 || fA.length < 2) return false;
+    // 모든 남녀 페어 조합 중 파트너 횟수 가장 적은 것 선택
+    let best = null, bestS = Infinity;
+    for (const m of mA) {
+      for (const f of fA) {
+        const s = partnerCnt[m]?.[f] || 0;
+        if (s < bestS) { bestS = s; best = [m, f]; }
+      }
+    }
+    if (!best) return false;
+    const [m1, f1] = best;
+    // 나머지 남자/여자 중 최적 파트너 찾기
+    const mA2 = mA.filter(p => p !== m1);
+    const fA2 = fA.filter(p => p !== f1);
+    if (mA2.length < 1 || fA2.length < 1) return false;
+    let best2 = null, bestS2 = Infinity;
+    for (const m of mA2) {
+      for (const f of fA2) {
+        const s = partnerCnt[m]?.[f] || 0;
+        if (s < bestS2) { bestS2 = s; best2 = [m, f]; }
+      }
+    }
+    if (!best2) return false;
+    const t1 = [m1, f1], t2 = best2;
+    [...t1, ...t2].forEach(p => assigned.add(p));
+    games.push({ team1: t1, team2: t2 }); return true;
+  }
+
+  function tryMale() {
+    const mA = mPlayers.filter(p => !assigned.has(p));
+    if (mA.length < 4) return false;
+    const split = bestFourSplit(mA);
+    if (!split) return false;
+    [...split.t1, ...split.t2].forEach(p => assigned.add(p));
+    games.push({ team1: split.t1, team2: split.t2 }); return true;
+  }
+
+  function tryFemale() {
+    const fA = fPlayers.filter(p => !assigned.has(p));
+    if (fA.length < 4) return false;
+    const split = bestFourSplit(fA);
+    if (!split) return false;
+    [...split.t1, ...split.t2].forEach(p => assigned.add(p));
+    games.push({ team1: split.t1, team2: split.t2 }); return true;
+  }
+
+  function tryMisc() {
+    const avail = shuffled.filter(p => !assigned.has(p));
+    if (avail.length < 4) return false;
+    const split = bestFourSplit(avail);
+    if (split) {
+      [...split.t1, ...split.t2].forEach(p => assigned.add(p));
+      games.push({ team1: split.t1, team2: split.t2 });
+    } else {
+      const t1=avail.slice(0,2), t2=avail.slice(2,4);
+      [...t1,...t2].forEach(p=>assigned.add(p));
+      games.push({team1:t1,team2:t2});
+    }
+    return true;
+  }
+
+  // 혼복 먼저
+  let mx=0;
+  while(mx<mixedAllow && games.length<numCourts) { if(tryMixed()) mx++; else break; }
+
+  // 나머지: 남복 → 여복 → 잡복(최후 수단)
+  while(games.length<numCourts) {
+    if(tryMale()) continue;
+    if(tryFemale()) continue;
+    if(tryMisc()) continue;
+    break;
+  }
+
+  return games;
+}
+
+// ── RENDER ──
+function renderResult(roundData, gameCount, restCount, typeCnt, allPlayers, mSet) {
+  const out = document.getElementById('roundsOutput');
+  out.innerHTML = '';
+
+  // 요약 바
+  const bar = document.createElement('div');
+  bar.className = 'summary-bar';
+  bar.innerHTML = `<div class="card-title">📊 인원별 게임 편성 수</div>
+    <div class="summary-grid">${allPlayers.map(p=>{
+      const rc=restCount[p]||0;
+      return `<div class="splayer">
+        <span style="font-size:12px">${mSet.has(p)?'🔵':'🔴'}</span>
+        <span class="splayer-name">${p}</span>
+        <span class="splayer-games">${gameCount[p]||0}</span>
+        ${rc>0?`<span class="splayer-rest">휴식${rc}</span>`:''}
+      </div>`;
+    }).join('')}</div>`;
+  out.appendChild(bar);
+
+  const typeLabel={male:'남복',female:'여복',mixed:'혼복',misc:'잡복'};
+  const typeBadge={male:'badge-male',female:'badge-female',mixed:'badge-mixed',misc:'badge-misc'};
+  const pn = p=>`<span class="pn ${mSet.has(p)?'pn-m':'pn-f'}">${p}</span>`;
+
+  roundData.forEach((rd,ri)=>{
+    const block=document.createElement('div');
+    block.className='round-block';
+    const playing=rd.courts.reduce((s,g)=>s+g.team1.length+g.team2.length,0);
+
+    let html=`<div class="round-hdr">
+      <span class="round-num">${ri+1}라운드</span>
+      <span class="round-meta">${playing}명 참가${rd.resting.length?' · '+rd.resting.length+'명 휴식':''}</span>
+    </div>`;
+
+    rd.courts.forEach((game,ci)=>{
+      const type=getGameType(game.team1,game.team2,mSet);
+      html+=`<div class="court-line">
+        <span class="cl-name">${courtNames[ci]||'코트'+(ci+1)}</span>
+        <span class="cl-badge ${typeBadge[type]}">${typeLabel[type]}</span>
+        <div class="cl-matchup">
+          <div class="cl-team">${game.team1.map(pn).join('')}</div>
+          <span class="cl-vs">VS</span>
+          <div class="cl-team">${game.team2.map(pn).join('')}</div>
+        </div>
+      </div>`;
+    });
+
+    if(rd.resting.length){
+      html+=`<div class="rest-line">
+        <span class="rest-lbl">🪑 휴식</span>
+        <div class="rest-names">${rd.resting.map(p=>`<span class="rchip">${p}</span>`).join('')}</div>
+      </div>`;
+    }
+
+    // 점수 입력 섹션
+    html += `<div class="score-section">
+      <div class="score-title">점수 입력 <span id="saved-badge-${ri}" class="score-saved-badge" style="display:none">✓ 저장됨</span></div>`;
+    rd.courts.forEach((game, ci) => {
+      const t1names = game.team1.join(' ');
+      const t2names = game.team2.join(' ');
+      html += `<div class="score-game-row">
+        <span class="score-court-label">${courtNames[ci]||'코트'+(ci+1)}</span>
+        <span class="score-teams">${t1names} vs ${t2names}</span>
+        <div class="score-input-group">
+          <input class="score-inp" id="sc-${ri}-${ci}-a" type="number" min="0" max="99" placeholder="0">
+          <span class="score-sep">:</span>
+          <input class="score-inp" id="sc-${ri}-${ci}-b" type="number" min="0" max="99" placeholder="0">
+        </div>
+      </div>`;
+    });
+    html += `<button class="score-save-btn" onclick="saveRoundScore(${ri})">💾 ${ri+1}라운드 점수 저장 → 랭킹 반영</button>
+    </div>`;
+
+    block.innerHTML=html;
+    out.appendChild(block);
+  });
+
+  // 통계
+  document.getElementById('statsTable').innerHTML=`
+    <thead><tr><th>선수</th><th>게임</th><th>남복</th><th>여복</th><th>혼복</th><th>잡복</th><th>휴식</th></tr></thead>
+    <tbody>${allPlayers.map(p=>`<tr>
+      <td><div class="pname-cell"><span>${mSet.has(p)?'🔵':'🔴'}</span><span>${p}</span></div></td>
+      <td class="nc nc-y">${gameCount[p]||0}</td>
+      <td class="nc nc-b">${typeCnt[p]?.male||0}</td>
+      <td class="nc nc-p">${typeCnt[p]?.female||0}</td>
+      <td class="nc nc-v">${typeCnt[p]?.mixed||0}</td>
+      <td class="nc nc-g">${typeCnt[p]?.misc||0}</td>
+      <td class="nc nc-g">${restCount[p]||0}</td>
+    </tr>`).join('')}</tbody>`;
+
+  const el=document.getElementById('result');
+  el.classList.add('visible');
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── SCORE & RANKING ──
+function saveRoundScore(ri) {
+  const rd = lastGeneratedRounds[ri];
+  if (!rd) return;
+  const memberSet = new Set(allMembers());
+
+  rd.courts.forEach((game, ci) => {
+    const rawA = document.getElementById(`sc-${ri}-${ci}-a`)?.value;
+    const rawB = document.getElementById(`sc-${ri}-${ci}-b`)?.value;
+    const sA = parseInt(rawA);
+    const sB = parseInt(rawB);
+    if (isNaN(sA) || isNaN(sB)) return;
+
+    const t1 = game.team1.filter(p => memberSet.has(p));
+    const t2 = game.team2.filter(p => memberSet.has(p));
+
+    // 결과 판정
+    let r1, r2; // 'w','d','l'
+    if (sA > sB)      { r1='w'; r2='l'; }
+    else if (sA < sB) { r1='l'; r2='w'; }
+    else              { r1='d'; r2='d'; }
+
+    t1.forEach(p => {
+      if (!rankData[p]) rankData[p] = {w:0,d:0,l:0,scored:0,conceded:0,games:0};
+      rankData[p][r1]++;
+      rankData[p].scored   += sA;
+      rankData[p].conceded += sB;
+      // games는 모임 출석 확정에서만 반영
+    });
+    t2.forEach(p => {
+      if (!rankData[p]) rankData[p] = {w:0,d:0,l:0,scored:0,conceded:0,games:0};
+      rankData[p][r2]++;
+      rankData[p].scored   += sB;
+      rankData[p].conceded += sA;
+      // games는 모임 출석 확정에서만 반영
+    });
+  });
+
+  roundScoreSaved[ri] = true;
+  const badge = document.getElementById(`saved-badge-${ri}`);
+  if (badge) badge.style.display = 'inline-block';
+  saveData();
+  renderRankTable();
+}
+
+function renderRankTable() {
+  const members = allMembers();
+  const rows = members.map(name => {
+    const d = rankData[name] || {w:0,d:0,l:0,scored:0,conceded:0};
+    const pts  = d.w*2 + d.d*1 + d.l*(-1);
+    const total = d.w + d.d + d.l;
+    const avg  = total > 0 ? (pts/total).toFixed(2) : '0.00';
+    const diff = d.scored - d.conceded;
+    const rate = total > 0 ? Math.round((d.w/total)*100) : 0;
+    const isMale = memberMales.includes(name);
+    return { name, isMale, w:d.w, d:d.d, l:d.l, pts, avg, diff, rate, total };
+  });
+
+  rows.sort((a,b) => b.pts-a.pts || b.diff-a.diff || b.w-a.w);
+
+  const tbody = document.getElementById('rankBody');
+  if (!tbody) return;
+  tbody.innerHTML = rows.map((r, i) => {
+    const rank = i+1;
+    const rankCls = rank<=3 ? `rank-${rank}` : '';
+    const diffStr = r.diff > 0 ? `+${r.diff}` : `${r.diff}`;
+    const diffCls = r.diff > 0 ? 'pos' : r.diff < 0 ? 'neg' : 'neu';
+    const rateCls = r.rate > 50 ? 'pos' : r.rate < 50 ? 'neg' : 'neu';
+    const genderIcon = r.isMale ? '🔵' : '🔴';
+    return `<tr class="${rankCls}">
+      <td><span class="rank-num">${rank}.</span><span style="font-size:11px;margin-right:4px">${genderIcon}</span><span class="rank-name">${r.name}</span></td>
+      <td class="rank-wl">${r.w} / ${r.d} / ${r.l}</td>
+      <td><span class="rank-pts">${r.pts}</span><span style="color:var(--text-muted);font-size:11px"> / ${r.avg}</span></td>
+      <td class="rank-rate ${diffCls}">${diffStr}</td>
+      <td class="rank-rate ${rateCls}">${r.rate}%</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── STORAGE ──
+function saveData() {
+  try {
+    localStorage.setItem('tlus_rankData', JSON.stringify(rankData));
+    localStorage.setItem('tlus_meetings', JSON.stringify(meetings));
+    localStorage.setItem('tlus_memberMales', JSON.stringify(memberMales));
+    localStorage.setItem('tlus_memberFemales', JSON.stringify(memberFemales));
+  } catch(e) { console.warn('저장 실패:', e); }
+}
+
+function loadData() {
+  try {
+    const rd = localStorage.getItem('tlus_rankData');
+    if (rd) rankData = JSON.parse(rd);
+    const mt = localStorage.getItem('tlus_meetings');
+    if (mt) meetings = JSON.parse(mt);
+    const mm = localStorage.getItem('tlus_memberMales');
+    if (mm) memberMales = JSON.parse(mm);
+    const mf = localStorage.getItem('tlus_memberFemales');
+    if (mf) memberFemales = JSON.parse(mf);
+  } catch(e) { console.warn('로드 실패:', e); }
+}
+
+// ── INIT ──
+loadData();
+renderAttendGrid();
+renderMgmt();
+renderCourtNames();
+initRankData();
+renderRankTable();
+renderMeetingPanel();
+
+// ── PWA 설치 ──
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').classList.remove('hidden');
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBtn').classList.add('hidden');
+  deferredPrompt = null;
+});
+
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+  } else {
+    // iOS Safari 안내
+    alert('📲 설치 방법\n\n아이폰: Safari 하단 공유버튼(□↑) → "홈 화면에 추가"\n\n안드로이드: Chrome 우상단 메뉴(⋮) → "홈 화면에 추가"');
+  }
+}
+</script>
+
+<!-- 앱 설치 버튼 (항상 하단 고정) -->
+<div class="install-bar">
+  <button class="install-btn" id="installBtn" onclick="installApp()">
+    📲 앱 설치 (홈 화면 추가)
+  </button>
+</div>
+</body>
+</html>
